@@ -1,5 +1,5 @@
 fs            = require 'fs'
-{print}       = require 'sys'
+{print}       = require 'util'
 child_process = require 'child_process'
 watchit       = require 'watchit'
 
