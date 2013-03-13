@@ -10,11 +10,11 @@
   },
   "main": "lib/snockets.js",
   "dependencies": {
-    "coffee-script": ">=1.1.2",
+    "coffee-script": "1.6.x",
     "dep-graph": "1.1.0",
-    "mime": "1.2.2",
-    "uglify-js": "1.0.7",
-    "underscore": "1.1.7"
+    "mime": "1.2.x",
+    "uglify-js": "2.2.x",
+    "underscore": "1.4.x"
   },
   "devDependencies": {
     "coffee-script": "1.1.2",
