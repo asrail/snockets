@@ -3,6 +3,7 @@
 DepGraph = require 'dep-graph'
 
 CoffeeScript = require 'coffee-script'
+LiveScript = require 'livescript'
 fs           = require 'fs'
 path         = require 'path'
 uglify       = require 'uglify-js'
@@ -259,6 +260,10 @@ module.exports.compilers = compilers =
     match: /\.js$/
     compileSync: (sourcePath, source) ->
       CoffeeScript.compile source, {filename: sourcePath}
+  ls:
+    match: /\.js$/
+    compileSync: (sourcePath, source) ->
+      LiveScript.compile source, {filename: sourcePath}
 
 # ## Regexes
 
