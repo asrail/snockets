@@ -318,12 +318,8 @@ jsExts = ->
   (".#{ext}" for ext of compilers).concat '.js'
 
 minify = (js) ->
-  jsp = uglify.parser
-  pro = uglify.uglify
-  ast = jsp.parse js
-  ast = pro.ast_mangle ast
-  ast = pro.ast_squeeze ast
-  pro.gen_code ast
+  result = uglify.minify js, {fromString: true}
+  result.code
 
 timeEq = (date1, date2) ->
   date1? and date2? and date1.getTime() is date2.getTime()
