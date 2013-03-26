@@ -3,7 +3,7 @@
 DepGraph = require 'dep-graph'
 
 CoffeeScript = require 'coffee-script'
-LiveScript = require 'livescript'
+LiveScript = require 'LiveScript'
 fs           = require 'fs'
 path         = require 'path'
 uglify       = require 'uglify-js'
