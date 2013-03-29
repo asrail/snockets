@@ -3,7 +3,7 @@
 DepGraph = require 'dep-graph'
 
 CoffeeScript = require 'coffee-script'
-LiveScript = require 'LiveScript'
+LiveScript   = require 'LiveScript'
 fs           = require 'fs'
 path         = require 'path'
 uglify       = require 'uglify-js'
@@ -70,14 +70,23 @@ module.exports = class Snockets
       try
         if @concatCache[filePath]?.data
           concatenation = @concatCache[filePath].data.toString 'utf8'
+          ast = @concatCache[filePath].ast
           if !flags.minify then concatenationChanged = false
         else
           chain = @depGraph.getChain filePath
-          concatenation = (for link in chain.concat filePath
+          toplevel = null
+          for link in chain.concat filePath
             @compileFile link
-            @cache[link].js.toString 'utf8'
-          ).join '\n'
+            code = @cache[link].js.toString 'utf8'
+            toplevel = uglify.parse code,
+              filename: link
+              toplevel: toplevel
+
+          toplevel.figure_out_scope()
+          concatenation = toplevel.print_to_string({beautify: true, semicolons: false, comments: true})
+
           @concatCache[filePath] = data: new Buffer(concatenation)
+          @concatCache[filePath].ast = ast = toplevel
       catch e
         if callback then return callback e else throw e
 
@@ -86,7 +95,7 @@ module.exports = class Snockets
           result = @concatCache[filePath].minifiedData.toString 'utf8'
           concatenationChanged = false
         else
-          result = minify concatenation
+          result = minify ast
           @concatCache[filePath].minifiedData = new Buffer(result)
       else
         result = concatenation
@@ -317,9 +326,13 @@ stripExt = (filePath) ->
 jsExts = ->
   (".#{ext}" for ext of compilers).concat '.js'
 
-minify = (js) ->
-  result = uglify.minify js, {fromString: true}
-  result.code
+minify = (ast) ->
+  ast.figure_out_scope()
+  compressed_ast = ast.transform uglify.Compressor({unused: false, side_effects: false})
+  compressed_ast.figure_out_scope()
+  compressed_ast.compute_char_frequency()
+  compressed_ast.mangle_names()
+  compressed_ast.print_to_string()
 
 timeEq = (date1, date2) ->
   date1? and date2? and date1.getTime() is date2.getTime()
