@@ -11,14 +11,13 @@
   "main": "lib/snockets.js",
   "dependencies": {
     "LiveScript": ">=0.9",
-    "coffee-script": "1.6.x",
+    "coffee-script": "1.1.2",
     "dep-graph": "1.1.0",
     "mime": "1.2.x",
     "uglify-js": "2.2.x",
     "underscore": "1.4.x"
   },
   "devDependencies": {
-    "coffee-script": "1.6.x",
     "nodeunit": "0.5.4",
     "watchit": ">=0.0.1"
   }
